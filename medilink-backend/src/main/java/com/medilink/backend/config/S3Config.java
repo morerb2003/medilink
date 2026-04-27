@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,7 @@ public class S3Config {
     private String secretKey;
 
     @Bean
+    @Lazy
     public AmazonS3 amazonS3() {
         AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard().withRegion(region);
         if (!accessKey.isBlank() && !secretKey.isBlank()) {
