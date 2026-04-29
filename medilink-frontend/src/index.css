@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-medilink-canvas text-medilink-ink antialiased selection:bg-medilink-mint selection:text-white;
+    font-family: 'Manrope', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-medilink-border shadow-glass;
+  }
+  
+  .glass-card {
+    @apply glass rounded-2xl shadow-panel;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-medilink-mint to-teal-600;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply bg-white rounded-3xl shadow-panel border border-medilink-border/50 transition-all duration-300;
+  }
+
+  .field-shell {
+    @apply flex flex-col gap-1.5;
+  }
+
+  .field-label {
+    @apply text-sm font-semibold text-medilink-ink/80;
+  }
+
+  .field-input {
+    @apply w-full rounded-2xl border border-medilink-border bg-medilink-canvas/50 px-4 py-3 text-sm transition focus:border-medilink-mint focus:bg-white focus:outline-none focus:ring-4 focus:ring-medilink-mint/10;
+  }
+
+  .section-copy {
+    @apply text-medilink-muted leading-relaxed max-w-prose;
+  }
+}

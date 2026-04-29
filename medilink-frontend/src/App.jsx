@@ -1,11 +1,21 @@
-function App() {
+
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+import AppRouter from './routes/AppRouter';
+
+const App = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <h1 className="text-4xl text-blue-500 font-bold">
-        Tailwind Working 🚀
-      </h1>
-    </div>
+    <AuthProvider>
+      <NotificationProvider>
+        <BrowserRouter>
+          <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+            <AppRouter />
+          </div>
+        </BrowserRouter>
+      </NotificationProvider>
+    </AuthProvider>
   );
-}
+};
 
 export default App;
