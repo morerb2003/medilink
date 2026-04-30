@@ -19,6 +19,10 @@ public class PatientDTO {
     private LocalDate dob;
     private String phone;
     private String healthId;
+    private String occupation;
+    private String languagePreference;
+    private String nationality;
+    private String address;
 
     private String bloodGroup;
     private List<String> allergies;

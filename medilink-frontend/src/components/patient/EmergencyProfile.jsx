@@ -20,6 +20,10 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
     instagram: '',
     facebook: '',
     linkedin: '',
+    occupation: '',
+    languagePreference: '',
+    nationality: '',
+    address: '',
   });
 
   useEffect(() => {
@@ -35,6 +39,10 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
       instagram: profile?.socialLinks?.instagram || '',
       facebook: profile?.socialLinks?.facebook || '',
       linkedin: profile?.socialLinks?.linkedin || '',
+      occupation: profile?.occupation || '',
+      languagePreference: profile?.languagePreference || '',
+      nationality: profile?.nationality || '',
+      address: profile?.address || '',
     });
   }, [profile]);
 
@@ -54,6 +62,10 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
       allergies: splitList(formState.allergies),
       currentMedications: splitList(formState.currentMedications),
       chronicConditions: splitList(formState.chronicConditions),
+      occupation: formState.occupation,
+      languagePreference: formState.languagePreference,
+      nationality: formState.nationality,
+      address: formState.address,
       emergencyContact: {
         name: formState.emergencyContactName,
         phone: formState.emergencyContactPhone,
@@ -68,11 +80,11 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
   }
 
   return (
-    <form className="surface-card space-y-6 p-10" onSubmit={handleSubmit}>
+    <form className="surface-card space-y-8 p-10" onSubmit={handleSubmit}>
       <div className="border-b border-medilink-border pb-6">
         <h3 className="text-2xl font-display font-black text-medilink-ink">Clinical Identity</h3>
         <p className="text-medilink-muted text-sm mt-1">
-          Accurate data here saves lives during break-glass overrides.
+          Life-saving data for emergency bypass events.
         </p>
       </div>
 
@@ -88,19 +100,31 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
           />
         </label>
 
-        <label className="field-shell">
-          <span className="field-label">Emergency contact</span>
-          <input
-            className="field-input"
-            name="emergencyContactName"
-            value={formState.emergencyContactName}
-            onChange={updateField}
-            placeholder="Primary responder contact"
-          />
-        </label>
+        <div className="grid grid-cols-2 gap-4">
+          <label className="field-shell">
+            <span className="field-label">Emergency Contact</span>
+            <input
+              className="field-input"
+              name="emergencyContactName"
+              value={formState.emergencyContactName}
+              onChange={updateField}
+              placeholder="Name"
+            />
+          </label>
+          <label className="field-shell">
+            <span className="field-label">Relation</span>
+            <input
+              className="field-input"
+              name="emergencyContactRelation"
+              value={formState.emergencyContactRelation}
+              onChange={updateField}
+              placeholder="Spouse, Parent..."
+            />
+          </label>
+        </div>
 
         <label className="field-shell">
-          <span className="field-label">Emergency phone</span>
+          <span className="field-label">Emergency Phone</span>
           <input
             className="field-input"
             name="emergencyContactPhone"
@@ -109,61 +133,79 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
             placeholder="+91 98xxxxxx"
           />
         </label>
-
-        <label className="field-shell">
-          <span className="field-label">Relationship</span>
-          <input
-            className="field-input"
-            name="emergencyContactRelation"
-            value={formState.emergencyContactRelation}
-            onChange={updateField}
-            placeholder="Parent, spouse, sibling"
-          />
-        </label>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-6">
         <label className="field-shell">
-          <span className="field-label">Allergies</span>
+          <span className="field-label">Allergies & Reactions</span>
           <textarea
             className="field-input min-h-24"
             name="allergies"
             value={formState.allergies}
             onChange={updateField}
-            placeholder="Comma-separated allergies"
-          />
-        </label>
-
-        <label className="field-shell">
-          <span className="field-label">Current medications</span>
-          <textarea
-            className="field-input min-h-24"
-            name="currentMedications"
-            value={formState.currentMedications}
-            onChange={updateField}
-            placeholder="Comma-separated medications"
-          />
-        </label>
-
-        <label className="field-shell">
-          <span className="field-label">Chronic conditions</span>
-          <textarea
-            className="field-input min-h-24"
-            name="chronicConditions"
-            value={formState.chronicConditions}
-            onChange={updateField}
-            placeholder="Diabetes, asthma, seizure history"
+            placeholder="Comma-separated list"
           />
         </label>
       </div>
 
-      <div className="border-t border-medilink-border pt-6 space-y-6">
+      <div className="border-t border-medilink-border pt-8 space-y-6">
         <div>
-          <h3 className="text-lg font-black text-medilink-ink">Social Connectivity</h3>
+          <h3 className="text-xl font-black text-medilink-ink">Personal Demographics</h3>
+          <p className="text-xs text-medilink-muted">General information for standard clinical encounters.</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <label className="field-shell">
+            <span className="field-label">Occupation</span>
+            <input
+              className="field-input"
+              name="occupation"
+              value={formState.occupation}
+              onChange={updateField}
+              placeholder="Software Engineer, etc."
+            />
+          </label>
+          <label className="field-shell">
+            <span className="field-label">Primary Language</span>
+            <input
+              className="field-input"
+              name="languagePreference"
+              value={formState.languagePreference}
+              onChange={updateField}
+              placeholder="English, Hindi, etc."
+            />
+          </label>
+          <label className="field-shell">
+            <span className="field-label">Nationality</span>
+            <input
+              className="field-input"
+              name="nationality"
+              value={formState.nationality}
+              onChange={updateField}
+              placeholder="Indian"
+            />
+          </label>
+        </div>
+
+        <label className="field-shell">
+          <span className="field-label">Residential Address</span>
+          <textarea
+            className="field-input min-h-20"
+            name="address"
+            value={formState.address}
+            onChange={updateField}
+            placeholder="Full mailing address"
+          />
+        </label>
+      </div>
+
+      <div className="border-t border-medilink-border pt-8 space-y-6">
+        <div>
+          <h3 className="text-xl font-black text-medilink-ink">Social Connectivity</h3>
           <p className="text-xs text-medilink-muted">Add your social handles for professional/personal verification.</p>
         </div>
         
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-3">
           <label className="field-shell">
             <span className="field-label">Instagram URL</span>
             <input

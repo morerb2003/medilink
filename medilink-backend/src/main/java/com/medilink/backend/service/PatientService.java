@@ -55,6 +55,10 @@ public class PatientService {
         patient.setAllergies(request.getAllergies());
         patient.setCurrentMedications(request.getCurrentMedications());
         patient.setChronicConditions(request.getChronicConditions());
+        patient.setOccupation(request.getOccupation());
+        patient.setLanguagePreference(request.getLanguagePreference());
+        patient.setNationality(request.getNationality());
+        patient.setAddress(request.getAddress());
 
         if (request.getEmergencyContact() != null) {
             patient.setEmergencyContact(Patient.EmergencyContact.builder()
@@ -105,6 +109,10 @@ public class PatientService {
                 .allergies(patient.getAllergies())
                 .currentMedications(patient.getCurrentMedications())
                 .chronicConditions(patient.getChronicConditions())
+                .occupation(patient.getOccupation())
+                .languagePreference(patient.getLanguagePreference())
+                .nationality(patient.getNationality())
+                .address(patient.getAddress())
                 .emergencyContact(contactDTO)
                 .socialLinks(socialDTO)
                 .build();

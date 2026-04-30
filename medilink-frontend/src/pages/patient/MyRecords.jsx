@@ -4,7 +4,8 @@ import RecordUpload from '../../components/patient/RecordUpload.jsx';
 import { NotificationContext } from '../../context/NotificationContext.jsx';
 import { useAuth } from '../../hooks/useAuth';
 import { useMyRecords, useUploadRecord } from '../../hooks/useRecords';
-import { formatDate, formatFileSize } from '../../utils/formatters';
+import { formatDate } from '../../utils/formatters';
+import HealthJourney from '../../components/patient/HealthJourney.jsx';
 
 function MyRecords() {
   const { userId } = useAuth();
@@ -32,35 +33,41 @@ function MyRecords() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
       <RecordUpload
         onUpload={handleUpload}
         isUploading={uploadMutation.isPending}
       />
 
-      <div className="surface-card p-6">
-        <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="space-y-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <h3 className="section-title">Record timeline</h3>
-            <p className="section-copy mt-1">
-              Filter the patient archive by title or structured record type.
+            <h3 className="text-3xl font-display font-black text-medilink-ink tracking-tight uppercase">Health Narrative</h3>
+            <p className="text-medilink-muted text-sm font-bold opacity-60 mt-1 uppercase tracking-widest">
+              A chronological history of your medical data
             </p>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
-            <input
-              className="field-input"
-              placeholder="Search title"
-              value={filters.search}
-              onChange={(event) =>
-                setFilters((current) => ({
-                  ...current,
-                  search: event.target.value,
-                }))
-              }
-            />
+          <div className="flex flex-wrap gap-4">
+            <div className="relative">
+              <input
+                className="field-input !pl-10 !h-12 w-64"
+                placeholder="Search history..."
+                value={filters.search}
+                onChange={(event) =>
+                  setFilters((current) => ({
+                    ...current,
+                    search: event.target.value,
+                  }))
+                }
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-medilink-muted opacity-40">
+                {/* Search Icon Placeholder */}
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              </div>
+            </div>
             <select
-              className="field-input"
+              className="field-input !h-12 !pr-10"
               value={filters.recordType}
               onChange={(event) =>
                 setFilters((current) => ({
@@ -69,56 +76,21 @@ function MyRecords() {
                 }))
               }
             >
-              <option value="">All types</option>
-              <option value="LAB_REPORT">Lab report</option>
-              <option value="PRESCRIPTION">Prescription</option>
-              <option value="IMAGING">Imaging</option>
-              <option value="DISCHARGE_SUMMARY">Discharge summary</option>
+              <option value="">All Categories</option>
+              <option value="LAB_REPORT">Diagnostics</option>
+              <option value="PRESCRIPTION">Prescriptions</option>
+              <option value="IMAGING">Radiology</option>
+              <option value="DISCHARGE_SUMMARY">Summaries</option>
             </select>
           </div>
         </div>
 
         {recordsQuery.isLoading ? (
-          <Spinner label="Loading records..." />
-        ) : (
-          <div className="space-y-4">
-            {(recordsQuery.data || []).map((record) => (
-              <div
-                key={record.id}
-                className="rounded-3xl border border-medilink-border bg-white/80 p-4"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <h4 className="font-semibold text-medilink-ink">{record.title}</h4>
-                    <p className="mt-1 text-sm text-medilink-muted">
-                      {record.recordType.replaceAll('_', ' ')} ·{' '}
-                      {formatDate(record.recordDate || record.createdAt)}
-                    </p>
-                    <p className="mt-1 text-sm text-medilink-muted">
-                      {record.hospitalName || 'Independent upload'} ·{' '}
-                      {formatFileSize(record.fileSizeBytes)}
-                    </p>
-                  </div>
-                  {record.fileUrl ? (
-                    <a
-                      className="text-sm font-semibold text-medilink-mint"
-                      href={record.fileUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View file
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-
-            {!recordsQuery.data?.length ? (
-              <div className="rounded-3xl border border-dashed border-medilink-border px-4 py-10 text-sm text-medilink-muted">
-                No records available yet.
-              </div>
-            ) : null}
+          <div className="flex flex-col items-center justify-center py-20">
+            <Spinner label="Sequencing your medical timeline..." />
           </div>
+        ) : (
+          <HealthJourney records={recordsQuery.data || []} />
         )}
       </div>
     </div>

@@ -60,6 +60,18 @@ public class Patient extends User {
     @Column(name = "qr_code", length = 512)
     private String qrCode;
 
+    @Column(name = "occupation", length = 100)
+    private String occupation;
+
+    @Column(name = "language_preference", length = 50)
+    private String languagePreference;
+
+    @Column(name = "nationality", length = 50)
+    private String nationality;
+
+    @Column(name = "address", length = 500)
+    private String address;
+
     @Column(name = "blood_group", length = 5)
     private String bloodGroup;
 

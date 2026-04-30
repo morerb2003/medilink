@@ -12,6 +12,7 @@ import { useConsentRequests } from '../../hooks/useConsent';
 import { useMyRecords } from '../../hooks/useRecords';
 import * as patientService from '../../services/patientService';
 import { formatDate } from '../../utils/formatters';
+import AITriage from '../../components/patient/AITriage.jsx';
 
 function Dashboard() {
   const { userId } = useAuth();
@@ -77,12 +78,27 @@ function Dashboard() {
           />
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-1">
-          <EmergencyProfile
-            profile={profileQuery.data}
-            onSave={(payload) => updateProfile.mutateAsync(payload)}
-            isSaving={updateProfile.isPending}
-          />
+        <div className="mb-10">
+          <h2 className="text-xl font-black text-medilink-ink uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
+            Operations Center <div className="h-0.5 flex-1 bg-medilink-border/50" />
+          </h2>
+          <div className="grid gap-10 lg:grid-cols-2 items-start">
+            <EmergencyProfile
+              profile={profileQuery.data}
+              onSave={(payload) => updateProfile.mutateAsync(payload)}
+              isSaving={updateProfile.isPending}
+            />
+            <div className="space-y-10">
+              <AITriage />
+              
+              <div className="glass-card !p-8 bg-gradient-to-br from-medilink-mint/5 to-transparent border-medilink-mint/10">
+                <p className="text-[10px] font-black uppercase tracking-widest text-medilink-mint mb-4">Network Notice</p>
+                <p className="text-sm font-medium text-medilink-ink leading-relaxed">
+                  Your profile is currently synchronized with **{profileQuery.data?.hospitalName || 'ABDM Gateway'}**. All emergency access events are logged to the immutable audit trail.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </AnimatedPage>
     </DashboardLayout>
