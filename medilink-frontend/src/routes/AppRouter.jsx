@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // Pages
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import LandingPage from '../pages/LandingPage';
 
 // Patient Pages
 import PatientDashboard from '../pages/patient/Dashboard';
@@ -32,7 +33,7 @@ import RoleRoute from './RoleRoute';
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/demo" element={<LiveConsentDemo />} />

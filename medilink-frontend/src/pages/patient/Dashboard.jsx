@@ -13,6 +13,8 @@ import { useMyRecords } from '../../hooks/useRecords';
 import * as patientService from '../../services/patientService';
 import { formatDate } from '../../utils/formatters';
 import AITriage from '../../components/patient/AITriage.jsx';
+import WellnessScore from '../../components/patient/WellnessScore.jsx';
+import MedicineTracker from '../../components/patient/MedicineTracker.jsx';
 
 function Dashboard() {
   const { userId } = useAuth();
@@ -52,52 +54,35 @@ function Dashboard() {
   return (
     <DashboardLayout role="patient">
       <AnimatedPage>
-        <div className="mb-10">
-          <h1 className="text-4xl font-display font-bold text-medilink-ink">Health Command</h1>
-          <p className="text-medilink-muted mt-2">Welcome back. Everything in your medical profile is encrypted and secure.</p>
+        <div className="mb-12">
+          <h1 className="text-5xl font-display font-black text-medilink-ink tracking-tight leading-none mb-3">
+            Health Intelligence
+          </h1>
+          <p className="text-medilink-muted font-bold uppercase tracking-[0.4em] text-[10px] opacity-60">
+            MediLink Neural Grid • Session Active
+          </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3 mb-10">
-          <DashboardStat 
-            label="Medical Records" 
-            value={records.length} 
-            icon={FileText} 
-            color="mint"
-          />
-          <DashboardStat 
-            label="Pending Consents" 
-            value={pendingConsents.length} 
-            icon={ShieldCheck} 
-            color="gold"
-          />
-          <DashboardStat 
-            label="Last Activity" 
-            value={records[0] ? formatDate(records[0].recordDate || records[0].createdAt) : 'None'} 
-            icon={Clock} 
-            color="coral"
-          />
+        {/* Row 1: Analytics & Triage */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-10">
+          <WellnessScore profile={profileQuery.data} />
+          <div className="lg:col-span-2">
+            <AITriage />
+          </div>
         </div>
 
+        {/* Row 2: Operations & Care */}
         <div className="mb-10">
-          <h2 className="text-xl font-black text-medilink-ink uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
+          <h2 className="text-xl font-black text-medilink-ink uppercase tracking-[0.3em] mb-8 flex items-center gap-4">
             Operations Center <div className="h-0.5 flex-1 bg-medilink-border/50" />
           </h2>
           <div className="grid gap-10 lg:grid-cols-2 items-start">
+            <MedicineTracker />
             <EmergencyProfile
               profile={profileQuery.data}
               onSave={(payload) => updateProfile.mutateAsync(payload)}
               isSaving={updateProfile.isPending}
             />
-            <div className="space-y-10">
-              <AITriage />
-              
-              <div className="glass-card !p-8 bg-gradient-to-br from-medilink-mint/5 to-transparent border-medilink-mint/10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-medilink-mint mb-4">Network Notice</p>
-                <p className="text-sm font-medium text-medilink-ink leading-relaxed">
-                  Your profile is currently synchronized with **{profileQuery.data?.hospitalName || 'ABDM Gateway'}**. All emergency access events are logged to the immutable audit trail.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </AnimatedPage>
