@@ -6,7 +6,7 @@ const LINKS_BY_ROLE = {
   PATIENT: [
     { to: '/patient', label: 'Overview' },
     { to: '/patient/records', label: 'My records' },
-    { to: '/patient/consent', label: 'Consent requests' },
+    { to: '/patient/consents', label: 'Consent requests' },
     { to: '/patient/qr', label: 'Generate QR' },
   ],
   DOCTOR: [
@@ -17,7 +17,7 @@ const LINKS_BY_ROLE = {
   ADMIN: [
     { to: '/admin', label: 'Overview' },
     { to: '/admin/users', label: 'Manage users' },
-    { to: '/admin/audit-logs', label: 'Audit logs' },
+    { to: '/admin/audit', label: 'Audit logs' },
     { to: '/admin/emergency-logs', label: 'Emergency logs' },
   ],
 };

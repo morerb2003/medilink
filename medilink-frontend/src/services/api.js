@@ -5,24 +5,34 @@ let unauthorizedHandler = null;
 
 function normalizeApiBaseUrl(rawUrl) {
   if (!rawUrl) {
-    return '/api';
+    return '/api/v1';
   }
 
-  if (rawUrl === '/api') {
-    return rawUrl;
+  if (rawUrl === '/api' || rawUrl === '/api/v1') {
+    return '/api/v1';
   }
 
   if (/^https?:\/\//.test(rawUrl)) {
     const url = new URL(rawUrl);
     const normalizedPath = url.pathname.replace(/\/$/, '');
-    url.pathname = normalizedPath.endsWith('/api')
-      ? normalizedPath
-      : `${normalizedPath}/api`;
+    if (normalizedPath.endsWith('/api/v1')) {
+      url.pathname = normalizedPath;
+    } else if (normalizedPath.endsWith('/api')) {
+      url.pathname = `${normalizedPath}/v1`;
+    } else {
+      url.pathname = `${normalizedPath}/api/v1`;
+    }
     return url.toString().replace(/\/$/, '');
   }
 
   const normalizedPath = rawUrl.replace(/\/$/, '');
-  return normalizedPath.endsWith('/api') ? normalizedPath : `${normalizedPath}/api`;
+  if (normalizedPath.endsWith('/api/v1')) {
+    return normalizedPath;
+  }
+  if (normalizedPath.endsWith('/api')) {
+    return `${normalizedPath}/v1`;
+  }
+  return `${normalizedPath}/api/v1`;
 }
 
 export function setAccessToken(token) {

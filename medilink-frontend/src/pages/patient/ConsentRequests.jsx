@@ -37,9 +37,11 @@ function ConsentRequests() {
     <ConsentManager
       requests={consentQuery.data || []}
       busyId={busyId}
-      onApprove={(consentId) => runAction(approveMutation.mutateAsync, consentId, 'Consent approved.')}
-      onReject={(consentId) => runAction(rejectMutation.mutateAsync, consentId, 'Consent rejected.')}
-      onRevoke={(consentId) => runAction(revokeMutation.mutateAsync, consentId, 'Consent revoked.')}
+      onApprove={(consentId, duration) => 
+        runAction(() => approveMutation.mutateAsync({ consentId, durationHours: duration }), consentId, 'Consent approved.')
+      }
+      onReject={(consentId) => runAction(() => rejectMutation.mutateAsync(consentId), consentId, 'Consent rejected.')}
+      onRevoke={(consentId) => runAction(() => revokeMutation.mutateAsync(consentId), consentId, 'Consent revoked.')}
     />
   );
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/patients/qr")
+@RequestMapping({"/api/v1/patients/qr", "/api/patients/qr"})
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('PATIENT')")
 public class QRController {

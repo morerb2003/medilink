@@ -11,6 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -70,6 +73,10 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
     @PreUpdate
     private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
@@ -78,6 +85,8 @@ public class User {
     public enum Role {
         PATIENT,
         DOCTOR,
-        ADMIN
+        ADMIN,
+        SUPER_ADMIN,
+        JR_ADMIN
     }
 }

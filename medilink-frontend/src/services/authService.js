@@ -11,13 +11,16 @@ export async function register(payload) {
 }
 
 export async function refresh(token) {
-  const response = await api.post('auth/refresh', { token });
+  const response = await api.post('auth/refresh', {
+    refreshToken: token,
+    token,
+  });
   return response.data;
 }
 
-export async function logout() {
+export async function logout(refreshToken) {
   try {
-    await api.post('auth/logout');
+    await api.post('auth/logout', { refreshToken });
   } catch (error) {
     if (error.response?.status !== 404) {
       throw error;

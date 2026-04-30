@@ -19,7 +19,9 @@ import AccessHistory from '../pages/doctor/AccessHistory';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/Dashboard';
+import LiveConsentDemo from '../pages/LiveConsentDemo';
 import ManageUsers from '../pages/admin/ManageUsers';
+import ManageOrganizations from '../pages/admin/ManageOrganizations';
 import AuditLogs from '../pages/admin/AuditLogs';
 import EmergencyLogs from '../pages/admin/EmergencyLogs';
 
@@ -33,6 +35,7 @@ const AppRouter = () => {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/demo" element={<LiveConsentDemo />} />
 
       {/* Patient Routes */}
       <Route path="/patient" element={<ProtectedRoute><RoleRoute role="patient"><PatientDashboard /></RoleRoute></ProtectedRoute>} />
@@ -43,12 +46,14 @@ const AppRouter = () => {
       {/* Doctor Routes */}
       <Route path="/doctor" element={<ProtectedRoute><RoleRoute role="doctor"><DoctorDashboard /></RoleRoute></ProtectedRoute>} />
       <Route path="/doctor/records" element={<ProtectedRoute><RoleRoute role="doctor"><PatientRecords /></RoleRoute></ProtectedRoute>} />
+      <Route path="/doctor/patients/:patientId" element={<ProtectedRoute><RoleRoute role="doctor"><PatientRecords /></RoleRoute></ProtectedRoute>} />
       <Route path="/doctor/emergency" element={<ProtectedRoute><RoleRoute role="doctor"><Emergency /></RoleRoute></ProtectedRoute>} />
       <Route path="/doctor/history" element={<ProtectedRoute><RoleRoute role="doctor"><AccessHistory /></RoleRoute></ProtectedRoute>} />
 
       {/* Admin Routes */}
       <Route path="/admin" element={<ProtectedRoute><RoleRoute role="admin"><AdminDashboard /></RoleRoute></ProtectedRoute>} />
       <Route path="/admin/users" element={<ProtectedRoute><RoleRoute role="admin"><ManageUsers /></RoleRoute></ProtectedRoute>} />
+      <Route path="/admin/organizations" element={<ProtectedRoute><RoleRoute role="admin"><ManageOrganizations /></RoleRoute></ProtectedRoute>} />
       <Route path="/admin/audit" element={<ProtectedRoute><RoleRoute role="admin"><AuditLogs /></RoleRoute></ProtectedRoute>} />
       <Route path="/admin/emergency-logs" element={<ProtectedRoute><RoleRoute role="admin"><EmergencyLogs /></RoleRoute></ProtectedRoute>} />
 

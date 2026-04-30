@@ -1,7 +1,8 @@
 package com.medilink.backend.controller;
 
-import com.medilink.backend.model.Consent;
+import com.medilink.backend.dto.ConsentDTO;
 import com.medilink.backend.service.ConsentService;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/consent")
+@RequestMapping("/api/v1/consents")
 @RequiredArgsConstructor
 public class ConsentController {
 
     private final ConsentService consentService;
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('PATIENT','DOCTOR')")
+    public ResponseEntity<List<ConsentDTO>> listConsents(
+            @RequestParam(required = false) UUID patientId,
+            @RequestParam(required = false) UUID doctorId
+    ) {
+        if (patientId != null) {
+            return ResponseEntity.ok(consentService.listByPatient(patientId));
+        }
+        if (doctorId != null) {
+            return ResponseEntity.ok(consentService.listByDoctor(doctorId));
+        }
+        throw new IllegalArgumentException("Either patientId or doctorId is required");
+    }
 
     @GetMapping("/check")
     @PreAuthorize("hasAnyRole('PATIENT','DOCTOR')")
@@ -33,7 +49,7 @@ public class ConsentController {
 
     @PostMapping("/request")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<Consent> requestConsent(@RequestBody Map<String, String> request) {
+    public ResponseEntity<ConsentDTO> requestConsent(@RequestBody Map<String, String> request) {
         UUID patientId = UUID.fromString(request.get("patientId"));
         UUID doctorId = UUID.fromString(request.get("doctorId"));
         String reason = request.getOrDefault("reason", "Consultation");
@@ -42,19 +58,23 @@ public class ConsentController {
 
     @PostMapping("/{consentId}/approve")
     @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<Consent> approveConsent(@PathVariable UUID consentId) {
-        return ResponseEntity.ok(consentService.approveConsent(consentId));
+    public ResponseEntity<ConsentDTO> approveConsent(
+            @PathVariable UUID consentId,
+            @RequestBody(required = false) Map<String, Integer> payload
+    ) {
+        Integer hours = payload != null ? payload.get("durationHours") : 24;
+        return ResponseEntity.ok(consentService.approveConsent(consentId, hours));
     }
 
     @PostMapping("/{consentId}/reject")
     @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<Consent> rejectConsent(@PathVariable UUID consentId) {
+    public ResponseEntity<ConsentDTO> rejectConsent(@PathVariable UUID consentId) {
         return ResponseEntity.ok(consentService.rejectConsent(consentId));
     }
 
     @PostMapping("/{consentId}/revoke")
     @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<Consent> revokeConsent(@PathVariable UUID consentId) {
+    public ResponseEntity<ConsentDTO> revokeConsent(@PathVariable UUID consentId) {
         return ResponseEntity.ok(consentService.revokeConsent(consentId));
     }
 }

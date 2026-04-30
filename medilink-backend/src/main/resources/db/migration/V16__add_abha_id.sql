@@ -1,0 +1,2 @@
+ALTER TABLE patients ADD COLUMN IF NOT EXISTS abha_id VARCHAR(20) UNIQUE;
+CREATE INDEX IF NOT EXISTS idx_abha_id ON patients(abha_id);

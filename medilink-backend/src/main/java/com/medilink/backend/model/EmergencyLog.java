@@ -19,17 +19,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Immutable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.EntityListeners;
 
 @Entity
-@Immutable
 @Table(name = "emergency_logs", indexes = {
-        @Index(name = "idx_emergency_patient", columnList = "patient_id"),
-        @Index(name = "idx_emergency_doctor", columnList = "doctor_id"),
-        @Index(name = "idx_emergency_time", columnList = "accessed_at DESC")
+    @Index(name = "idx_emergency_patient", columnList = "patient_id"),
+    @Index(name = "idx_emergency_doctor", columnList = "doctor_id"),
+    @Index(name = "idx_emergency_time", columnList = "accessed_at DESC"),
+    @Index(name = "idx_emergency_status", columnList = "status")
 })
 @EntityListeners(AuditingEntityListener.class)
 @Getter
@@ -72,8 +71,40 @@ public class EmergencyLog {
     @Builder.Default
     private boolean flagged = false;
 
+    // ── Enhanced fields for OTP flow ───────────────────────────────────────
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    @Builder.Default
+    private EmergencyStatus status = EmergencyStatus.ACTIVE;
+
+    @Column(name = "otp_hash", length = 255)
+    private String otpHash;  // BCrypt hash of OTP (cleared after use)
+
+    @Column(name = "otp_expires_at")
+    private LocalDateTime otpExpiresAt;  // 5 min from generation
+
+    @Column(name = "access_granted_at")
+    private LocalDateTime accessGrantedAt;
+
+    @Column(name = "geo_location", length = 100)
+    private String geoLocation;  // "lat,lon" from client-sent coords
+
+    @Column(name = "device_fingerprint", length = 255)
+    private String deviceFingerprint;  // User-Agent + screen + platform hash
+
+    @Column(name = "country_code", length = 5)
+    private String countryCode;
+
     public enum AccessMethod {
         HEALTH_ID,
-        QR_SCAN
+        QR_SCAN,
+        MANUAL_OVERRIDE  // Admin-approved bypass in extreme cases
+    }
+
+    public enum EmergencyStatus {
+        OTP_PENDING,
+        ACTIVE,
+        EXPIRED,
+        REVOKED
     }
 }

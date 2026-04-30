@@ -9,7 +9,7 @@ function AccessHistory() {
   const historyQuery = useQuery({
     queryKey: ['doctor', 'history', userId],
     queryFn: async () => {
-      const response = await api.get(`doctor/${userId}/history`);
+      const response = await api.get(`practitioners/${userId}/history`);
       return response.data;
     },
     enabled: Boolean(userId),
@@ -33,10 +33,10 @@ function AccessHistory() {
               key={event.id}
               className="rounded-3xl border border-medilink-border bg-white/80 p-4"
             >
-              <p className="font-semibold text-medilink-ink">{event.accessType || 'Emergency access'}</p>
+              <p className="font-semibold text-medilink-ink">{event.accessMethod || 'Emergency access'}</p>
               <p className="mt-1 text-sm text-medilink-muted">Patient: {event.patientId}</p>
               <p className="mt-1 text-sm text-medilink-muted">
-                {formatDate(event.createdAt, { includeTime: true })}
+                {formatDate(event.accessedAt, { includeTime: true })}
               </p>
             </div>
           ))}

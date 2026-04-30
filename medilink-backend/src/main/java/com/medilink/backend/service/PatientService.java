@@ -1,8 +1,10 @@
 package com.medilink.backend.service;
 
+import com.medilink.backend.dto.PatientLookupDTO;
 import com.medilink.backend.dto.PatientDTO;
 import com.medilink.backend.exception.ResourceNotFoundException;
 import com.medilink.backend.model.Patient;
+import java.util.List;
 import com.medilink.backend.repository.PatientRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,26 @@ public class PatientService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
         return mapToDto(patient);
+    }
+
+    public List<PatientLookupDTO> searchByNameOrHealthId(String query) {
+        String normalized = query == null ? "" : query.trim();
+        if (normalized.length() < 2) {
+            return List.of();
+        }
+
+        return patientRepository
+                .findTop20ByFullNameContainingIgnoreCaseOrHealthIdContainingIgnoreCaseOrderByFullNameAsc(
+                        normalized,
+                        normalized
+                )
+                .stream()
+                .map(patient -> PatientLookupDTO.builder()
+                .id(patient.getId())
+                .fullName(patient.getFullName())
+                .healthId(patient.getHealthId())
+                .build())
+                .toList();
     }
 
     @Transactional

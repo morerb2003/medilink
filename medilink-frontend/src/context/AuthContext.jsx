@@ -13,6 +13,7 @@ export const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [session, setSessionState] = useState({
     token: null,
+    refreshToken: null,
     role: null,
     userId: null,
   });
@@ -23,6 +24,7 @@ export function AuthProvider({ children }) {
     clearAccessToken();
     setSessionState({
       token: null,
+      refreshToken: null,
       role: null,
       userId: null,
     });
@@ -30,13 +32,15 @@ export function AuthProvider({ children }) {
 
   function setSession(nextSession) {
     const token = nextSession?.accessToken ?? null;
+    const refreshToken = nextSession?.refreshToken ?? session.refreshToken ?? null;
     const parsedToken = parseToken(token);
     const role = nextSession?.role ?? parsedToken?.role ?? null;
-    const userId = nextSession?.userId ?? parsedToken?.sub ?? null;
+    const userId = nextSession?.userId ?? parsedToken?.userId ?? null;
 
     setAccessToken(token);
     setSessionState({
       token,
+      refreshToken,
       role,
       userId,
     });
@@ -50,18 +54,18 @@ export function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      await authService.logout();
+      await authService.logout(session.refreshToken);
     } finally {
       clearSession();
     }
   }
 
-  async function refreshToken() {
-    if (!session.token) {
+  async function refreshSession() {
+    if (!session.refreshToken) {
       return null;
     }
 
-    const response = await authService.refresh(session.token);
+    const response = await authService.refresh(session.refreshToken);
     setSession(response);
     return response;
   }
@@ -87,12 +91,13 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         token: session.token,
+        refreshToken: session.refreshToken,
         role: session.role,
         userId: session.userId,
         isAuthenticated,
         login,
         logout,
-        refreshToken,
+        refreshSession,
         setSession,
         clearSession,
       }}

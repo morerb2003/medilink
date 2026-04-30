@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final com.medilink.backend.security.RateLimitingFilter rateLimitingFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,18 +32,22 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/v1/auth/**",
                                 "/api/auth/**",
+                                "/api/v1/public/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/patients/**").hasRole("PATIENT")
-                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
-                        .requestMatchers("/api/emergency/**").hasRole("DOCTOR")
-                        .requestMatchers("/api/records/**", "/api/consent/**").authenticated()
+                        .requestMatchers("/api/v1/admin/**", "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/patients/**").authenticated()
+                        .requestMatchers("/api/patients/qr/**").hasRole("PATIENT")
+                        .requestMatchers("/api/v1/doctor/**", "/api/v1/practitioners/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/v1/emergency/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/v1/records/**", "/api/v1/consents/**").authenticated()
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAuthFilter, com.medilink.backend.security.RateLimitingFilter.class);
 
         return http.build();
     }

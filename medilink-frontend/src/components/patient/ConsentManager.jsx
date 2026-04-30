@@ -6,11 +6,14 @@ import { formatDate } from '../../utils/formatters';
 
 function ConsentManager({ requests, onApprove, onReject, onRevoke, busyId }) {
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [approvingRequest, setApprovingRequest] = useState(null);
+  const [selectedDuration, setSelectedDuration] = useState(24);
 
   const sortedRequests = useMemo(
     () =>
       [...requests].sort(
-        (left, right) => new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime(),
+        (left, right) =>
+          new Date(right.requestedAt || 0).getTime() - new Date(left.requestedAt || 0).getTime(),
       ),
     [requests],
   );
@@ -43,17 +46,17 @@ function ConsentManager({ requests, onApprove, onReject, onRevoke, busyId }) {
                     </Badge>
                   </div>
                   <p className="text-sm text-medilink-muted">
-                    Doctor ID: {request.doctorId || 'Pending backend inbox mapping'}
+                    Doctor: {request.doctorName || request.doctorId || 'Pending backend inbox mapping'}
                   </p>
                   <p className="text-sm text-medilink-muted">
-                    Requested {formatDate(request.createdAt, { includeTime: true })}
+                    Requested {formatDate(request.requestedAt, { includeTime: true })}
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
-                    onClick={() => onApprove?.(request.id)}
+                    onClick={() => setApprovingRequest(request)}
                     disabled={busyId === request.id}
                   >
                     Approve
@@ -85,6 +88,44 @@ function ConsentManager({ requests, onApprove, onReject, onRevoke, busyId }) {
           </div>
         )}
       </div>
+
+      <Modal
+        open={Boolean(approvingRequest)}
+        title="Approve Access Request"
+        description="Select how long this clinical team can view your records. Access will auto-expire."
+        confirmLabel="Confirm Approval"
+        onConfirm={() => {
+          if (approvingRequest) {
+            onApprove?.(approvingRequest.id, selectedDuration);
+          }
+          setApprovingRequest(null);
+        }}
+        onClose={() => setApprovingRequest(null)}
+      >
+        <div className="space-y-4">
+          <p className="text-sm font-bold text-medilink-ink">Duration of Access:</p>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: '2 Hours', value: 2 },
+              { label: '24 Hours', value: 24 },
+              { label: '1 Week', value: 168 },
+            ].map((d) => (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() => setSelectedDuration(d.value)}
+                className={`py-3 rounded-xl text-xs font-black uppercase tracking-widest border-2 transition-all ${
+                  selectedDuration === d.value
+                    ? 'border-medilink-mint bg-medilink-mint/10 text-medilink-mint'
+                    : 'border-medilink-border text-medilink-muted hover:border-medilink-muted'
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Modal>
 
       <Modal
         open={Boolean(selectedRequest)}

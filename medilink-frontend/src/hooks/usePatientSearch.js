@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import * as patientService from '../services/patientService';
 
 export function usePatientSearch(initialQuery = '') {
   const [query, setQuery] = useState(initialQuery);
@@ -17,7 +18,7 @@ export function usePatientSearch(initialQuery = '') {
 
   const searchQuery = useQuery({
     queryKey: ['patients', 'search', debouncedQuery],
-    queryFn: async () => [],
+    queryFn: async () => patientService.searchPatients(debouncedQuery),
     enabled: debouncedQuery.trim().length >= 2,
     initialData: [],
   });

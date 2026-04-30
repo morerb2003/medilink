@@ -7,40 +7,60 @@
     @apply bg-medilink-canvas text-medilink-ink antialiased selection:bg-medilink-mint selection:text-white;
     font-family: 'Manrope', system-ui, sans-serif;
   }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-medilink-border rounded-full hover:bg-medilink-muted/50 transition;
+  }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-medilink-border shadow-glass;
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-glass;
   }
   
   .glass-card {
-    @apply glass rounded-2xl shadow-panel;
+    @apply glass rounded-[2.5rem] shadow-panel;
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-medilink-mint to-teal-600;
   }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
 }
 
 @layer components {
   .surface-card {
-    @apply bg-white rounded-3xl shadow-panel border border-medilink-border/50 transition-all duration-300;
+    @apply bg-white rounded-[2rem] shadow-panel border border-medilink-border/30 transition-all duration-500 hover:shadow-2xl hover:border-medilink-mint/20;
   }
 
   .field-shell {
-    @apply flex flex-col gap-1.5;
+    @apply flex flex-col gap-2;
   }
 
   .field-label {
-    @apply text-sm font-semibold text-medilink-ink/80;
+    @apply text-[13px] font-bold uppercase tracking-wider text-medilink-ink/60 px-1;
   }
 
   .field-input {
-    @apply w-full rounded-2xl border border-medilink-border bg-medilink-canvas/50 px-4 py-3 text-sm transition focus:border-medilink-mint focus:bg-white focus:outline-none focus:ring-4 focus:ring-medilink-mint/10;
+    @apply w-full rounded-2xl border border-medilink-border bg-medilink-canvas/30 px-5 py-3.5 text-sm transition-all duration-300 focus:border-medilink-mint focus:bg-white focus:outline-none focus:ring-8 focus:ring-medilink-mint/5;
   }
 
   .section-copy {
-    @apply text-medilink-muted leading-relaxed max-w-prose;
+    @apply text-medilink-muted leading-relaxed max-w-prose text-lg;
+  }
+
+  .premium-button {
+    @apply relative overflow-hidden transition-all duration-300 active:scale-95;
   }
 }

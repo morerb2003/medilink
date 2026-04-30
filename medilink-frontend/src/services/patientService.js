@@ -14,3 +14,10 @@ export async function generateQR(patientId) {
   const response = await api.get(`patients/qr/${patientId}`);
   return response.data;
 }
+
+export async function searchPatients(query) {
+  const response = await api.get('patients/search', {
+    params: { query },
+  });
+  return response.data;
+}

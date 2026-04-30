@@ -11,8 +11,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     Optional<Doctor> findByLicenseNo(String licenseNo);
 
-    List<Doctor> findByVerifiedFalse();
+    List<Doctor> findAllByVerifiedAtIsNull();
 
-    @Query("select d from Doctor d where d.verified = false")
-    List<Doctor> findByIsVerifiedFalse();
+    long countByVerifiedAtIsNull();
 }

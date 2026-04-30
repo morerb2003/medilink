@@ -26,7 +26,8 @@ import lombok.experimental.SuperBuilder;
 @Table(
         name = "patients",
         indexes = {
-                @Index(name = "idx_health_id", columnList = "health_id", unique = true)
+                @Index(name = "idx_health_id", columnList = "health_id", unique = true),
+                @Index(name = "idx_abha_id", columnList = "abha_id", unique = true)
         }
 )
 @PrimaryKeyJoinColumn(name = "id")
@@ -52,6 +53,9 @@ public class Patient extends User {
 
     @Column(name = "health_id", nullable = false, unique = true, length = 20)
     private String healthId;
+
+    @Column(name = "abha_id", unique = true, length = 20)
+    private String abhaId;
 
     @Column(name = "qr_code", length = 512)
     private String qrCode;
