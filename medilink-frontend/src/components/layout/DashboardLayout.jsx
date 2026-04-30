@@ -17,11 +17,13 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useState } from 'react';
+import ProfileOverlay from './ProfileOverlay';
 
 const DashboardLayout = ({ children, role = 'patient' }) => {
   const { logout, userId } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -140,8 +142,11 @@ const DashboardLayout = ({ children, role = 'patient' }) => {
               <span className="text-sm font-black text-medilink-ink">Authenticated Hub</span>
               <span className="text-[10px] font-bold text-medilink-muted/60 uppercase tracking-widest">ID: {userId?.slice(0,8)}...</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-white border border-medilink-border shadow-sm flex items-center justify-center hover:shadow-md transition-shadow cursor-pointer">
-              <User className="text-medilink-muted w-6 h-6" />
+            <div 
+              onClick={() => setIsProfileOpen(true)}
+              className="w-12 h-12 rounded-2xl bg-white border border-medilink-border shadow-sm flex items-center justify-center hover:shadow-md hover:border-medilink-mint/50 transition-all cursor-pointer group"
+            >
+              <User className="text-medilink-muted group-hover:text-medilink-mint w-6 h-6 transition-colors" />
             </div>
           </div>
         </header>
@@ -195,6 +200,16 @@ const DashboardLayout = ({ children, role = 'patient' }) => {
               </nav>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isProfileOpen && (
+          <ProfileOverlay 
+            isOpen={isProfileOpen} 
+            onClose={() => setIsProfileOpen(false)} 
+            userId={userId}
+          />
         )}
       </AnimatePresence>
     </div>

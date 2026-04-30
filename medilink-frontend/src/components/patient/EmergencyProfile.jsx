@@ -17,6 +17,9 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
     emergencyContactName: '',
     emergencyContactPhone: '',
     emergencyContactRelation: '',
+    instagram: '',
+    facebook: '',
+    linkedin: '',
   });
 
   useEffect(() => {
@@ -29,6 +32,9 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
       emergencyContactName: profile?.emergencyContact?.name || '',
       emergencyContactPhone: profile?.emergencyContact?.phone || '',
       emergencyContactRelation: profile?.emergencyContact?.relation || '',
+      instagram: profile?.socialLinks?.instagram || '',
+      facebook: profile?.socialLinks?.facebook || '',
+      linkedin: profile?.socialLinks?.linkedin || '',
     });
   }, [profile]);
 
@@ -53,20 +59,24 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
         phone: formState.emergencyContactPhone,
         relation: formState.emergencyContactRelation,
       },
+      socialLinks: {
+        instagram: formState.instagram,
+        facebook: formState.facebook,
+        linkedin: formState.linkedin,
+      },
     });
   }
 
   return (
-    <form className="surface-card space-y-4 p-6" onSubmit={handleSubmit}>
-      <div>
-        <h3 className="section-title">Emergency profile</h3>
-        <p className="section-copy mt-1">
-          Keep the life-saving summary current so the emergency QR and break-glass snapshot are
-          accurate.
+    <form className="surface-card space-y-6 p-10" onSubmit={handleSubmit}>
+      <div className="border-b border-medilink-border pb-6">
+        <h3 className="text-2xl font-display font-black text-medilink-ink">Clinical Identity</h3>
+        <p className="text-medilink-muted text-sm mt-1">
+          Accurate data here saves lives during break-glass overrides.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <label className="field-shell">
           <span className="field-label">Blood group</span>
           <input
@@ -112,38 +122,80 @@ function EmergencyProfile({ profile, onSave, isSaving }) {
         </label>
       </div>
 
-      <label className="field-shell">
-        <span className="field-label">Allergies</span>
-        <textarea
-          className="field-input min-h-24"
-          name="allergies"
-          value={formState.allergies}
-          onChange={updateField}
-          placeholder="Comma-separated allergies"
-        />
-      </label>
+      <div className="grid gap-4">
+        <label className="field-shell">
+          <span className="field-label">Allergies</span>
+          <textarea
+            className="field-input min-h-24"
+            name="allergies"
+            value={formState.allergies}
+            onChange={updateField}
+            placeholder="Comma-separated allergies"
+          />
+        </label>
 
-      <label className="field-shell">
-        <span className="field-label">Current medications</span>
-        <textarea
-          className="field-input min-h-24"
-          name="currentMedications"
-          value={formState.currentMedications}
-          onChange={updateField}
-          placeholder="Comma-separated medications"
-        />
-      </label>
+        <label className="field-shell">
+          <span className="field-label">Current medications</span>
+          <textarea
+            className="field-input min-h-24"
+            name="currentMedications"
+            value={formState.currentMedications}
+            onChange={updateField}
+            placeholder="Comma-separated medications"
+          />
+        </label>
 
-      <label className="field-shell">
-        <span className="field-label">Chronic conditions</span>
-        <textarea
-          className="field-input min-h-24"
-          name="chronicConditions"
-          value={formState.chronicConditions}
-          onChange={updateField}
-          placeholder="Diabetes, asthma, seizure history"
-        />
-      </label>
+        <label className="field-shell">
+          <span className="field-label">Chronic conditions</span>
+          <textarea
+            className="field-input min-h-24"
+            name="chronicConditions"
+            value={formState.chronicConditions}
+            onChange={updateField}
+            placeholder="Diabetes, asthma, seizure history"
+          />
+        </label>
+      </div>
+
+      <div className="border-t border-medilink-border pt-6 space-y-6">
+        <div>
+          <h3 className="text-lg font-black text-medilink-ink">Social Connectivity</h3>
+          <p className="text-xs text-medilink-muted">Add your social handles for professional/personal verification.</p>
+        </div>
+        
+        <div className="grid gap-4 md:grid-cols-3">
+          <label className="field-shell">
+            <span className="field-label">Instagram URL</span>
+            <input
+              className="field-input"
+              name="instagram"
+              value={formState.instagram}
+              onChange={updateField}
+              placeholder="instagram.com/handle"
+            />
+          </label>
+          <label className="field-shell">
+            <span className="field-label">Facebook URL</span>
+            <input
+              className="field-input"
+              name="facebook"
+              value={formState.facebook}
+              onChange={updateField}
+              placeholder="facebook.com/profile"
+            />
+          </label>
+          <label className="field-shell">
+            <span className="field-label">LinkedIn URL</span>
+            <input
+              className="field-input"
+              name="linkedin"
+              value={formState.linkedin}
+              onChange={updateField}
+              placeholder="linkedin.com/in/handle"
+            />
+          </label>
+        </div>
+      </div>
 
       <Button type="submit" disabled={isSaving}>
         {isSaving ? 'Saving...' : 'Save emergency profile'}

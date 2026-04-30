@@ -26,6 +26,7 @@ public class PatientDTO {
     private List<String> chronicConditions;
 
     private EmergencyContactDTO emergencyContact;
+    private SocialLinksDTO socialLinks;
 
     @Getter
     @Setter
@@ -36,6 +37,17 @@ public class PatientDTO {
         private String name;
         private String phone;
         private String relation;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SocialLinksDTO {
+        private String instagram;
+        private String facebook;
+        private String linkedin;
     }
 }
 

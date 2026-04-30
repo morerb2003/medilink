@@ -64,6 +64,14 @@ public class PatientService {
                     .build());
         }
 
+        if (request.getSocialLinks() != null) {
+            patient.setSocialLinks(Patient.SocialLinks.builder()
+                    .instagram(request.getSocialLinks().getInstagram())
+                    .facebook(request.getSocialLinks().getFacebook())
+                    .linkedin(request.getSocialLinks().getLinkedin())
+                    .build());
+        }
+
         return mapToDto(patientRepository.save(patient));
     }
 
@@ -75,6 +83,15 @@ public class PatientService {
                 .name(contact.getName())
                 .phone(contact.getPhone())
                 .relation(contact.getRelation())
+                .build();
+
+        Patient.SocialLinks social = patient.getSocialLinks();
+        PatientDTO.SocialLinksDTO socialDTO = social == null
+                ? null
+                : PatientDTO.SocialLinksDTO.builder()
+                .instagram(social.getInstagram())
+                .facebook(social.getFacebook())
+                .linkedin(social.getLinkedin())
                 .build();
 
         return PatientDTO.builder()
@@ -89,6 +106,7 @@ public class PatientService {
                 .currentMedications(patient.getCurrentMedications())
                 .chronicConditions(patient.getChronicConditions())
                 .emergencyContact(contactDTO)
+                .socialLinks(socialDTO)
                 .build();
     }
 }

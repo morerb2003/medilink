@@ -93,6 +93,9 @@ public class Patient extends User {
     @Embedded
     private EmergencyContact emergencyContact;
 
+    @Embedded
+    private SocialLinks socialLinks;
+
     @Embeddable
     @Getter
     @Setter
@@ -100,7 +103,6 @@ public class Patient extends User {
     @AllArgsConstructor
     @Builder
     public static class EmergencyContact {
-
         @Column(name = "emergency_contact_name", length = 255)
         private String name;
 
@@ -109,5 +111,22 @@ public class Patient extends User {
 
         @Column(name = "emergency_contact_relation", length = 50)
         private String relation;
+    }
+
+    @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SocialLinks {
+        @Column(name = "instagram_url", length = 512)
+        private String instagram;
+
+        @Column(name = "facebook_url", length = 512)
+        private String facebook;
+
+        @Column(name = "linkedin_url", length = 512)
+        private String linkedin;
     }
 }

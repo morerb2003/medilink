@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.medilink.backend.model.Patient;
 import java.util.UUID;
 
 @Service
@@ -49,7 +50,7 @@ public class NotificationService {
     /**
      * Send emergency access notification to patient and their emergency contact.
      */
-    public void sendEmergencyAccessNotification(com.medilink.backend.model.Patient patient, UUID doctorId) {
+    public void sendEmergencyAccessNotification(Patient patient, UUID doctorId) {
         log.info("Sending emergency access notification to patient {} by doctor {}",
                 patient.getId(), doctorId);
         
